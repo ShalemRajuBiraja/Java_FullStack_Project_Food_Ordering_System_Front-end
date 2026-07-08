@@ -1,19 +1,66 @@
 import "./LoginModal.css";
+import { useState } from "react";
+import { isEmailValid, passwordRegex } from "../utils/reusableCode";
+import { login } from "../services/authService";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 // Props:
 // show   -> boolean, controls whether modal is visible
 // onClose -> function, called when modal should close (backdrop click, X button, cancel)
 const LoginModal = ({ show, onClose, onSwitchToSignup  }) => {
+
+    const [loginData, setLoginData] = useState({email: "", password: ""});
+    const [loginErrors, setLoginErrors] = useState({email: "", password: ""});
+    const navigate = useNavigate();
+
   if (!show) return null;
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
+
     e.preventDefault();
-    // TODO: Step 1 - read form values (email, password)
-    // TODO: Step 2 - validate fields
-    // TODO: Step 3 - call POST /api/auth/login
-    // TODO: Step 4 - on success: store token/user in localStorage,
-    //                dispatch "authChange" event, close modal
-    // TODO: Step 5 - on failure: show error message
+
+    let tempErrors = {...loginErrors};
+    let hasErrors = false;
+
+    if(!loginData.email.trim()){
+        tempErrors.email = "Email is required";
+        hasErrors = true;
+    } else if(!isEmailValid(loginData.email)){
+        tempErrors.email = "Please enter a valid email address";
+        hasErrors = true;
+    }
+
+    if(!loginData.password.trim()){
+        tempErrors.password = "Password is required";
+        hasErrors = true;
+    } else if(!passwordRegex.test(loginData.password)){
+        tempErrors.password = "Enter long password with uppercase, lowercase, and number";
+        hasErrors = true;
+    }
+
+    setLoginErrors(tempErrors);
+
+    if(!hasErrors){
+
+        try{
+            const loginData = await login({loginData});
+
+            if(loginData?.data?.success){
+                sessionStorage.setItem("token", loginData.data.token);
+                sessionStorage.setItem("userData", JSON.stringify(loginData.data.user));
+
+                toast.success("Login successful!");
+                onClose();
+
+                navigate("/home");
+            }
+
+        } catch (error) {
+                console.error("Login failed:", error);
+                toast.error(error.response?.data?.message);
+            }
+    }
   };
 
   return (
@@ -36,7 +83,7 @@ const LoginModal = ({ show, onClose, onSwitchToSignup  }) => {
 
           {/* TODO: server error message will go here */}
 
-          <form onSubmit={handleSubmit} noValidate>
+          <form onSubmit={handleLogin} noValidate>
             <div className="mb-3">
               <label htmlFor="loginEmail" className="form-label">
                 Email address
@@ -47,6 +94,7 @@ const LoginModal = ({ show, onClose, onSwitchToSignup  }) => {
                 id="loginEmail"
                 name="email"
                 placeholder="you@example.com"
+                onChange={(e) => setLoginData({...loginData, email: e.target.value})}
               />
               {/* TODO: field error message will go here */}
             </div>
@@ -61,6 +109,7 @@ const LoginModal = ({ show, onClose, onSwitchToSignup  }) => {
                 id="loginPassword"
                 name="password"
                 placeholder="Enter your password"
+                onChange={(e) => setLoginData({...loginData, password: e.target.value})}
               />
               {/* TODO: field error message will go here */}
             </div>

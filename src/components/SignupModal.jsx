@@ -1,31 +1,19 @@
 import "./SignupModal.css";
 import { useState } from "react";
-import { nameRegex, mobileRegex, passwordRegex, isEmailValid } from "../utils/ReusableCode";
-import { signup } from "../services/AuthService";
+import { nameRegex, mobileRegex, passwordRegex, isEmailValid } from "../utils/reusableCode";
+import { signup } from "../services/authService";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 // Props:
 // show   -> boolean, controls whether modal is visible
 // onClose -> function, called when modal should close (backdrop click, X button, cancel)
 const SignupModal = ({ show, onClose, onSwitchToLogin }) => {
-  const [signupData, setSignupData] = useState({
-    name: "",
-    email: "",
-    mobile: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [signupErrors, setSignupErrors] = useState({
-    name: "",
-    email: "",
-    mobile: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const navigate = useNavigate();
 
+  const [signupData, setSignupData] = useState({ name: "", email: "", mobile: "", password: "", confirmPassword: "",});
+  const [signupErrors, setSignupErrors] = useState({ name: "", email: "", mobile: "", password: "", confirmPassword: "", });
+  const navigate = useNavigate();
   if (!show) return null;
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,62 +27,61 @@ const SignupModal = ({ show, onClose, onSwitchToLogin }) => {
   const handleCreateAccount = async (e) => {
     e.preventDefault();
 
-    const tempErrors = {
-      name: "",
-      email: "",
-      mobile: "",
-      password: "",
-      confirmPassword: "",
-    };
+    let tempErrors = { name: "", email: "", mobile: "", password: "", confirmPassword: "", };
+    let hasErrors = false;
 
     if (!signupData.name.trim()) {
       tempErrors.name = "Name is required";
+      hasErrors = true;
     } else if (!nameRegex.test(signupData.name)) {
       tempErrors.name = "Name can only contain letters and spaces";
-    }
+      hasErrors = true;
+    } 
 
     if (!signupData.email.trim()) {
       tempErrors.email = "Email is required";
+      hasErrors = true;
     } else if (!isEmailValid(signupData.email)) {
       tempErrors.email = "Please enter a valid email address";
+      hasErrors = true;
     }
 
     if (!signupData.mobile.trim()) {
       tempErrors.mobile = "Mobile number is required";
+      hasErrors = true;
     } else if (!mobileRegex.test(signupData.mobile)) {
       tempErrors.mobile = "Please enter a valid mobile number";
+      hasErrors = true;
     }
 
     if (!signupData.password.trim()) {
       tempErrors.password = "Password is required";
+      hasErrors = true;
     } else if (!passwordRegex.test(signupData.password)) {
       tempErrors.password = "Enter long password with uppercase, lowercase, and number";
-    }
-
+      hasErrors = true;
+    } 
     if (!signupData.confirmPassword.trim()) {
       tempErrors.confirmPassword = "Please confirm your password";
+      hasErrors = true;
     } else if (signupData.password !== signupData.confirmPassword) {
       tempErrors.confirmPassword = "Passwords do not match";
-    }
+      hasErrors = true;
+    } 
 
     setSignupErrors(tempErrors);
-
-    const hasErrors = Object.values(tempErrors).some((error) => error);
 
     if (!hasErrors) {
         try{
               const userData = await signup(signupData);
-                if (userData.data.success) {
-                    localStorage.setItem("token", userData.data.token);
-                    localStorage.setItem("user", JSON.stringify(userData.data.user));
-
+                if (userData?.data?.success) {
                     toast.success("Account created successfully!");
                     navigate("/login");
                 }
 
         } catch (error) {
             console.log(error.message);
-            toast.error("Failed to create account. Please try again.");
+            toast.error(error.response?.data?.message );
         }
     
     } //if closed
@@ -116,7 +103,7 @@ const SignupModal = ({ show, onClose, onSwitchToLogin }) => {
             ></button>
           </div>
 
-          <form onSubmit={handleCreateAccount} noValidate>
+          <form onSubmit={handleCreateAccount} noValidate> {/* noValidate is used to disable the browser's default validation. without this, browser show own error messages */}
             <div className="mb-3">
               <label htmlFor="signupName" className="form-label">
                 Full Name
