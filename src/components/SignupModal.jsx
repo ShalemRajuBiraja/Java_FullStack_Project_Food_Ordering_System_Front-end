@@ -1,0 +1,222 @@
+import "./SignupModal.css";
+import { useState } from "react";
+import { nameRegex, mobileRegex, passwordRegex, isEmailValid } from "../utils/ReusableCode";
+import { signup } from "../services/AuthService";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+// Props:
+// show   -> boolean, controls whether modal is visible
+// onClose -> function, called when modal should close (backdrop click, X button, cancel)
+const SignupModal = ({ show, onClose, onSwitchToLogin }) => {
+  const [signupData, setSignupData] = useState({
+    name: "",
+    email: "",
+    mobile: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [signupErrors, setSignupErrors] = useState({
+    name: "",
+    email: "",
+    mobile: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const navigate = useNavigate();
+
+  if (!show) return null;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSignupData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  //CREATE ACCOUNT FUNCTION
+  const handleCreateAccount = async (e) => {
+    e.preventDefault();
+
+    const tempErrors = {
+      name: "",
+      email: "",
+      mobile: "",
+      password: "",
+      confirmPassword: "",
+    };
+
+    if (!signupData.name.trim()) {
+      tempErrors.name = "Name is required";
+    } else if (!nameRegex.test(signupData.name)) {
+      tempErrors.name = "Name can only contain letters and spaces";
+    }
+
+    if (!signupData.email.trim()) {
+      tempErrors.email = "Email is required";
+    } else if (!isEmailValid(signupData.email)) {
+      tempErrors.email = "Please enter a valid email address";
+    }
+
+    if (!signupData.mobile.trim()) {
+      tempErrors.mobile = "Mobile number is required";
+    } else if (!mobileRegex.test(signupData.mobile)) {
+      tempErrors.mobile = "Please enter a valid mobile number";
+    }
+
+    if (!signupData.password.trim()) {
+      tempErrors.password = "Password is required";
+    } else if (!passwordRegex.test(signupData.password)) {
+      tempErrors.password = "Enter long password with uppercase, lowercase, and number";
+    }
+
+    if (!signupData.confirmPassword.trim()) {
+      tempErrors.confirmPassword = "Please confirm your password";
+    } else if (signupData.password !== signupData.confirmPassword) {
+      tempErrors.confirmPassword = "Passwords do not match";
+    }
+
+    setSignupErrors(tempErrors);
+
+    const hasErrors = Object.values(tempErrors).some((error) => error);
+
+    if (!hasErrors) {
+        try{
+              const userData = await signup(signupData);
+                if (userData.data.success) {
+                    localStorage.setItem("token", userData.data.token);
+                    localStorage.setItem("user", JSON.stringify(userData.data.user));
+
+                    toast.success("Account created successfully!");
+                    navigate("/login");
+                }
+
+        } catch (error) {
+            console.log(error.message);
+            toast.error("Failed to create account. Please try again.");
+        }
+    
+    } //if closed
+  };
+
+  return (
+    <>
+      <div className="modal-backdrop-custom" onClick={onClose}></div>
+
+      <div className="signup-modal-wrapper">
+        <div className="signup-modal-box shadow">
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h4 className="fw-bold mb-0">Create Account❤️</h4>
+            <button
+              type="button"
+              className="btn-close"
+              aria-label="Close"
+              onClick={onClose}
+            ></button>
+          </div>
+
+          <form onSubmit={handleCreateAccount} noValidate>
+            <div className="mb-3">
+              <label htmlFor="signupName" className="form-label">
+                Full Name
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="signupName"
+                name="name"
+                placeholder="Your full name"
+                value={signupData.name}
+                onChange={handleChange}
+              />
+              {signupErrors.name && <div className="text-danger small">{signupErrors.name}</div>}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="signupEmail" className="form-label">
+                Email address
+              </label>
+              <input
+                type="email"
+                required
+                className="form-control"
+                id="signupEmail"
+                name="email"
+                placeholder="you@example.com"
+                value={signupData.email}
+                onChange={handleChange}
+              />
+              {signupErrors.email && <div className="text-danger small">{signupErrors.email}</div>}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="signupMobile" className="form-label">
+                Mobile Number
+              </label>
+              <input
+                type="tel"
+                className="form-control"
+                id="signupMobile"
+                name="mobile"
+                placeholder="Your mobile number"
+                value={signupData.mobile}
+                onChange={handleChange}
+              />
+              {signupErrors.mobile && <div className="text-danger small">{signupErrors.mobile}</div>}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="signupPassword" className="form-label">
+                Password
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                id="signupPassword"
+                name="password"
+                placeholder="Create a password"
+                value={signupData.password}
+                onChange={handleChange}
+              />
+              {signupErrors.password && <div className="text-danger small">{signupErrors.password}</div>}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="signupConfirmPassword" className="form-label">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                id="signupConfirmPassword"
+                name="confirmPassword"
+                placeholder="Re-enter your password"
+                value={signupData.confirmPassword}
+                onChange={handleChange}
+              />
+              {signupErrors.confirmPassword && <div className="text-danger small">{signupErrors.confirmPassword}</div>}
+            </div>
+
+            <button type="submit" className="btn btn-primary w-100">
+              Sign Up
+            </button>
+          </form>
+
+          <p className="text-center text-secondary mt-3 mb-0 small">
+            Already have an account?{' '}
+            <button
+              type="button"
+              className="btn btn-link p-0 align-baseline"
+              onClick={onSwitchToLogin}
+            >
+              Login
+            </button>
+          </p>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default SignupModal;

@@ -1,0 +1,19 @@
+.body-container {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.body-container h1 {
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.body-container p {
+    font-size: 22px;
+    font-weight: 400;
+}

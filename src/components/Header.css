@@ -1,0 +1,50 @@
+/* Header.css
+   Bootstrap classes handle the bulk of the styling (navbar, btn, etc.).
+   These rules only add the small touches Bootstrap doesn't cover. */
+
+/* .custom-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1030;
+} */
+
+.custom-header .navbar-brand {
+  color: #ff6b35;
+  letter-spacing: 0.5px;
+}
+
+.custom-header .nav-link {
+  font-weight: 500;
+  color: #333;
+}
+
+.custom-header .nav-link:hover {
+  color: #ff6b35;
+}
+
+.custom-header .bi-person-circle:hover {
+  color: #ff6b35 !important;
+  cursor: pointer;
+}
+
+/* Keep Login/Signup/Logout buttons from stretching full width on desktop,
+   while still stacking nicely on mobile (handled by Bootstrap's w-100). */
+@media (min-width: 992px) {
+  .custom-header .btn-sm.w-100 {
+    width: auto !important;
+  }
+}
+.custom-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 10%;
+
+    z-index: 1000;
+
+    background-color: white;
+}
