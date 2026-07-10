@@ -48,3 +48,104 @@
 
     background-color: white;
 }
+/* Header.css
+   Bootstrap classes handle the bulk of the styling (navbar, btn, etc.).
+   These rules only add the small touches Bootstrap doesn't cover. */
+
+.custom-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1030;
+}
+
+.custom-header .navbar-brand {
+  color: #ff6b35;
+  letter-spacing: 0.5px;
+}
+
+.custom-header .nav-link {
+  font-weight: 500;
+  color: #333;
+}
+
+.custom-header .nav-link:hover {
+  color: #ff6b35;
+}
+
+.custom-header .bi-person-circle:hover {
+  color: #ff6b35 !important;
+  cursor: pointer;
+}
+
+/* Keep Login/Signup/Logout buttons from stretching full width on desktop,
+   while still stacking nicely on mobile (handled by Bootstrap's w-100). */
+@media (min-width: 992px) {
+  .custom-header .btn-sm.w-100 {
+    width: auto !important;
+  }
+}
+
+/* Profile Avatar (initials) */
+.profile-avatar-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background-color: #ff6b35;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.profile-avatar-btn:hover {
+  background-color: #e85a2a;
+}
+
+/* Profile Dropdown */
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: #fff;
+  border-radius: 10px;
+  min-width: 200px;
+  padding: 0.5rem 0;
+  z-index: 1050;
+}
+
+.profile-dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.profile-dropdown-item:hover {
+  background-color: #fff3ee;
+  color: #35ea21;
+}
+.profile-dropdown-divider {
+  margin: 0.4rem 0;
+  border-color: #eee;
+}
+
+.profile-dropdown-logout {
+  color: #dc3545;
+}
+
+.profile-dropdown-logout:hover {
+  background-color: #fdeceb;
+  color: #dc3545;
+}

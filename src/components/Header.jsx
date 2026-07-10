@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import  { useState, useEffect, useRef } from "react";
 import LoginModal from "./LoginModal";
 import SignupModal from "./SignupModal";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,6 +7,9 @@ import "./Header.css";
 const Header = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
+
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const profileMenuRef = useRef(null);
 
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
@@ -36,6 +39,30 @@ const Header = () => {
       window.removeEventListener("authChange", syncAuthState);
     };
   }, []);
+
+
+
+  // Close the dropdown when clicking anywhere outside it
+  useEffect(() => {
+  const handleClickOutside = (e) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(e.target)) {
+        setShowProfileMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Derive initials from the logged-in user's name (stored earlier in localStorage)
+  const getUserInitials = () => {
+    const user = JSON.parse(localStorage.getItem("userData") || "{}");
+    if (!user.name) return "U";
+    const parts = user.name.trim().split(" ");
+    const initials = parts.length > 1
+      ? parts[0][0] + parts[parts.length - 1][0]
+      : parts[0][0];
+    return initials.toUpperCase();
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -78,14 +105,18 @@ const Header = () => {
                 Reviews
               </Link>
             </li>
-
-            {!isLoggedIn && (
-              <li className="nav-item">
+            <li className="nav-item">
                 <Link className="nav-link" to="/contact">
                   Contact
                 </Link>
               </li>
-            )}
+              <li className="nav-item">
+                <Link className="nav-link" to="/adminlogin">
+                  Admin Login
+                </Link>
+              </li>
+
+         
 
             {isLoggedIn && (
               <>
@@ -130,14 +161,33 @@ const Header = () => {
                     <i className="bi bi-person-circle fs-4 text-dark"></i>
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <button
-                    onClick={handleLogout}
-                    className="btn btn-outline-danger btn-sm w-100"
-                  >
-                    Logout
-                  </button>
-                </li>
+                <li className="nav-item me-lg-3 mb-2 mb-lg-0 position-relative" ref={profileMenuRef}>
+                   <button className="profile-avatar-btn" onClick={() => setShowProfileMenu((prev) => !prev)}> {getUserInitials()} </button>
+
+                    { showProfileMenu && (
+                      <div className="profile-dropdown shadow">
+                        <button className="profile-dropdown-item" onClick={() => setShowProfileMenu(false)}>
+                          Manage Address
+                        </button>
+                        <button className="profile-dropdown-item" onClick={() => setShowProfileMenu(false)}>
+                          Reset Password
+                        </button>
+                        <button className="profile-dropdown-item" onClick={() => setShowProfileMenu(false)}>
+                          Orders History
+                        </button>
+                        <button className="profile-dropdown-item" onClick={() => setShowProfileMenu(false)}>
+                          Notifications
+                        </button>
+                        <button className="profile-dropdown-item" onClick={() => setShowProfileMenu(false)}>
+                          Settings
+                        </button>
+                        <hr className="profile-dropdown-divider" />
+                        <button className="profile-dropdown-item profile-dropdown-logout" onClick={handleLogout}>
+                           Logout
+                        </button>
+                      </div>
+                    )}
+                  </li>
               </>
             )}
           </ul>
@@ -146,17 +196,18 @@ const Header = () => {
 
       <LoginModal show={showLoginModal} onClose={() => setShowLoginModal(false)} />
       <SignupModal show={showSignupModal} onClose={() => setShowSignupModal(false)} />
+
         <LoginModal
             show={showLoginModal}
             onClose={() => setShowLoginModal(false)}
             onSwitchToSignup={handleSwitchToSignup}
         />
 
-      <SignupModal
-        show={showSignupModal}
-        onClose={() => setShowSignupModal(false)}
-        onSwitchToLogin={handleSwitchToLogin}
-      />
+        <SignupModal
+          show={showSignupModal}
+          onClose={() => setShowSignupModal(false)}
+          onSwitchToLogin={handleSwitchToLogin}
+        />
     </nav>
   );
 };
