@@ -28,8 +28,7 @@ const Body = () => {
         }
       } catch (error) {
          console.log(error.message);
-        toast.error(error.response.message);
-      }
+         toast.error(error.response?.data?.message || "Something went wrong");      }
     };
 
     fetchFoodItems();
@@ -77,7 +76,7 @@ const Body = () => {
                 />
 
                 <div className="card-body d-flex flex-column">
-                  <h5 className="card-title">{food.name}</h5>
+                  <h5 className="card-title">{food.foodName}</h5>
                   <p className="card-text text-secondary small food-description">
                     {food.description}
                   </p>
