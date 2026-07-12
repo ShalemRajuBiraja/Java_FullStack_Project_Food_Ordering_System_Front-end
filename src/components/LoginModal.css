@@ -32,3 +32,23 @@
   width: 100%;
   max-width: 400px;
 }
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input-wrapper input {
+  padding-right: 40px;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+}
+
+.password-toggle-icon:hover {
+  color: #ff6b35;
+}

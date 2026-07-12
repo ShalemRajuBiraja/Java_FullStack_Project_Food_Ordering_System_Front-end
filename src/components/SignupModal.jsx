@@ -3,15 +3,13 @@ import { useState } from "react";
 import { nameRegex, mobileRegex, passwordRegex, isEmailValid } from "../utils/reusableCode";
 import { signup } from "../services/authService";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 // Props:
 // show   -> boolean, controls whether modal is visible
 // onClose -> function, called when modal should close (backdrop click, X button, cancel)
 const SignupModal = ({ show, onClose, onSwitchToLogin }) => {
 
-  const [signupData, setSignupData] = useState({ name: "", email: "", mobile: "", password: "", confirmPassword: "",});
-  const [signupErrors, setSignupErrors] = useState({ name: "", email: "", mobile: "", password: "", confirmPassword: "", });
-  const navigate = useNavigate();
+  const [signupData, setSignupData] = useState({ fullName: "", email: "", mobileNumber: "", password: ""});
+  const [signupErrors, setSignupErrors] = useState({ name: "", email: "", mobile: "", password: "" });
   if (!show) return null;
 
 
@@ -27,13 +25,13 @@ const SignupModal = ({ show, onClose, onSwitchToLogin }) => {
   const handleCreateAccount = async (e) => {
     e.preventDefault();
 
-    let tempErrors = { name: "", email: "", mobile: "", password: "", confirmPassword: "", };
+    let tempErrors = { name: "", email: "", mobile: "", password: "" };
     let hasErrors = false;
 
-    if (!signupData.name.trim()) {
+    if (!signupData.fullName.trim()) {
       tempErrors.name = "Name is required";
       hasErrors = true;
-    } else if (!nameRegex.test(signupData.name)) {
+    } else if (!nameRegex.test(signupData.fullName)) {
       tempErrors.name = "Name can only contain letters and spaces";
       hasErrors = true;
     } 
@@ -46,10 +44,10 @@ const SignupModal = ({ show, onClose, onSwitchToLogin }) => {
       hasErrors = true;
     }
 
-    if (!signupData.mobile.trim()) {
+    if (!signupData.mobileNumber.trim()) {
       tempErrors.mobile = "Mobile number is required";
       hasErrors = true;
-    } else if (!mobileRegex.test(signupData.mobile)) {
+    } else if (!mobileRegex.test(signupData.mobileNumber)) {
       tempErrors.mobile = "Please enter a valid mobile number";
       hasErrors = true;
     }
@@ -61,13 +59,7 @@ const SignupModal = ({ show, onClose, onSwitchToLogin }) => {
       tempErrors.password = "Enter long password with uppercase, lowercase, and number";
       hasErrors = true;
     } 
-    if (!signupData.confirmPassword.trim()) {
-      tempErrors.confirmPassword = "Please confirm your password";
-      hasErrors = true;
-    } else if (signupData.password !== signupData.confirmPassword) {
-      tempErrors.confirmPassword = "Passwords do not match";
-      hasErrors = true;
-    } 
+    
 
     setSignupErrors(tempErrors);
 
@@ -76,12 +68,12 @@ const SignupModal = ({ show, onClose, onSwitchToLogin }) => {
               const userData = await signup(signupData);
                 if (userData?.data?.success) {
                     toast.success("Account created successfully!");
-                    navigate("/login");
+                     onSwitchToLogin();   // ✅ closes Signup modal, opens Login modal
                 }
 
         } catch (error) {
             console.log(error.message);
-            toast.error(error.response?.data?.message );
+            toast.error( error.response?.data?.message );
         }
     
     } //if closed
@@ -112,9 +104,9 @@ const SignupModal = ({ show, onClose, onSwitchToLogin }) => {
                 type="text"
                 className="form-control"
                 id="signupName"
-                name="name"
+                name="fullName"
                 placeholder="Your full name"
-                value={signupData.name}
+                value={signupData.fullName}
                 onChange={handleChange}
               />
               {signupErrors.name && <div className="text-danger small">{signupErrors.name}</div>}
@@ -145,9 +137,9 @@ const SignupModal = ({ show, onClose, onSwitchToLogin }) => {
                 type="tel"
                 className="form-control"
                 id="signupMobile"
-                name="mobile"
+                name="mobileNumber"
                 placeholder="Your mobile number"
-                value={signupData.mobile}
+                value={signupData.mobileNumber}
                 onChange={handleChange}
               />
               {signupErrors.mobile && <div className="text-danger small">{signupErrors.mobile}</div>}
@@ -169,23 +161,7 @@ const SignupModal = ({ show, onClose, onSwitchToLogin }) => {
               {signupErrors.password && <div className="text-danger small">{signupErrors.password}</div>}
             </div>
 
-            <div className="mb-3">
-              <label htmlFor="signupConfirmPassword" className="form-label">
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="signupConfirmPassword"
-                name="confirmPassword"
-                placeholder="Re-enter your password"
-                value={signupData.confirmPassword}
-                onChange={handleChange}
-              />
-              {signupErrors.confirmPassword && <div className="text-danger small">{signupErrors.confirmPassword}</div>}
-            </div>
-
-            <button type="submit" className="btn btn-primary w-100">
+            <button type="submit" className="btn btn-primary w-100" >
               Sign Up
             </button>
           </form>

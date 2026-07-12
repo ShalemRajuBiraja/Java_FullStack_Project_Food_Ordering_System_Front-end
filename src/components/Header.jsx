@@ -193,10 +193,6 @@ const Header = () => {
           </ul>
         </div>
       </div>
-
-      <LoginModal show={showLoginModal} onClose={() => setShowLoginModal(false)} />
-      <SignupModal show={showSignupModal} onClose={() => setShowSignupModal(false)} />
-
         <LoginModal
             show={showLoginModal}
             onClose={() => setShowLoginModal(false)}

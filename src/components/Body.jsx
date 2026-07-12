@@ -14,8 +14,10 @@ const Body = () => {
     const fetchFoodItems = async () => {
       try {
         const response = await getFoodItems(page, size);
+        console.log(response.data);
         if (response.data.success) {
-          setFoodItems(response.data.data);
+          // setFoodItems(response.data.data); wrong
+          setFoodItems(response.data.data.content);
 
           // Initialize quantity = 1 for every food item on this page
           const initialQuantities = {};
@@ -25,7 +27,7 @@ const Body = () => {
           setQuantities(initialQuantities);
         }
       } catch (error) {
-        console.log(error);
+         console.log(error.message);
         toast.error(error.response.message);
       }
     };
@@ -49,12 +51,12 @@ const Body = () => {
   };
 
   // TODO: Add to Cart — call cart service with { foodId, quantity }
-  const handleAddToCart = (food) => {
+  const handleAddToCart = () => {
     // const qty = quantities[food.id];
   };
 
   // TODO: Order Now — likely Add to Cart + redirect to checkout/orders
-  const handleOrderNow = (food) => {
+  const handleOrderNow = () => {
     // const qty = quantities[food.id];
   };
 
@@ -80,7 +82,7 @@ const Body = () => {
                     {food.description}
                   </p>
                   <p className="fw-bold food-price mb-3">
-                    ₹{food.price}
+                    ₹{food.foodPrice}
                   </p>
 
                   {/* Quantity Stepper */}

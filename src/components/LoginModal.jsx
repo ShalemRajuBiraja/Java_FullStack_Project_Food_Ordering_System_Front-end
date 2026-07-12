@@ -13,6 +13,7 @@ const LoginModal = ({ show, onClose, onSwitchToSignup  }) => {
     const [loginData, setLoginData] = useState({email: "", password: ""});
     const [loginErrors, setLoginErrors] = useState({email: "", password: ""});
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
 
   if (!show) return null;
 
@@ -40,26 +41,23 @@ const LoginModal = ({ show, onClose, onSwitchToSignup  }) => {
     }
 
     setLoginErrors(tempErrors);
+    if (!hasErrors) {
+        try {
+            const response = await login(loginData);
 
-    if(!hasErrors){
-
-        try{
-            const loginData = await login({loginData});
-
-            if(loginData?.data?.success){
-                sessionStorage.setItem("token", loginData.data.token);
-                sessionStorage.setItem("userData", JSON.stringify(loginData.data.user));
+            if (response?.data?.success) {
+                localStorage.setItem("token", response.data.token);
+                localStorage.setItem("user", JSON.stringify(response.data.user));
+                window.dispatchEvent(new Event("authChange"));
 
                 toast.success("Login successful!");
                 onClose();
-
                 navigate("/home");
             }
-
         } catch (error) {
-                console.error("Login failed:", error);
-                toast.error(error.response?.data?.message);
-            }
+            console.error("Login failed:", error);
+            toast.error(error.response?.data?.message);
+        }
     }
   };
 
@@ -99,18 +97,30 @@ const LoginModal = ({ show, onClose, onSwitchToSignup  }) => {
               {/* TODO: field error message will go here */}
             </div>
 
-            <div className="mb-3">
-              <label htmlFor="loginPassword" className="form-label">
-                Password
-              </label>
+           <div className="mb-3">
+            <label htmlFor="loginPassword" className="form-label">
+              Password
+            </label>
+            <div className="password-input-wrapper">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 className="form-control"
                 id="loginPassword"
                 name="password"
                 placeholder="Enter your password"
                 onChange={(e) => setLoginData({...loginData, password: e.target.value})}
               />
+              <span
+                className="password-toggle-icon"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+              </span>
+              
+            </div>
+             {/* TODO: field error message will go here */}
+        </div>
+              <div>
               {/* TODO: field error message will go here */}
             </div>
 
