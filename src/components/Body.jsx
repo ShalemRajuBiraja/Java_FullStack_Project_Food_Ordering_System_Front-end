@@ -2,6 +2,7 @@ import "./Body.css";
 import { useEffect, useState } from "react";
 import { getFoodItems } from "../services/foodItemsService.js";
 import { toast } from "react-toastify";
+import {addToCart} from "../services/foodItemsService.js"
 
 const Body = () => {
   const [foodItems, setFoodItems] = useState([]);
@@ -14,45 +15,67 @@ const Body = () => {
     const fetchFoodItems = async () => {
       try {
         const response = await getFoodItems(page, size);
-        console.log(response.data);
         if (response.data.success) {
           // setFoodItems(response.data.data); wrong
           setFoodItems(response.data.data.content);
 
           // Initialize quantity = 1 for every food item on this page
           const initialQuantities = {};
-          response.data.data.forEach((food) => {
-            initialQuantities[food.id] = 1;
+          response.data.data.content.forEach((food) => {
+            initialQuantities[food.foodId] = 1;
           });
           setQuantities(initialQuantities);
         }
       } catch (error) {
          console.log(error.message);
-         toast.error(error.response?.data?.message || "Something went wrong");      }
+         toast.error(error.response?.data?.message );      }
     };
 
     fetchFoodItems();
   }, [page]);
 
   // Quantity stepper handlers — pure UI state, no API calls
-  const handleIncrement = (foodId) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [foodId]: prev[foodId] + 1,
-    }));
-  };
+ const handleIncrement = (foodId) => {
+  setQuantities((prev) => ({
+    ...prev,
+    [foodId]: (prev[foodId] || 1) + 1,
+  }));
+};
 
-  const handleDecrement = (foodId) => {
-    setQuantities((prev) => ({
+ const handleDecrement = (foodId) => {
+  setQuantities((prev) => {
+    const currentQuantity = prev[foodId] || 1;
+
+    return {
       ...prev,
-      [foodId]: prev[foodId] > 1 ? prev[foodId] - 1 : 1,
-    }));
-  };
+      [foodId]: currentQuantity > 1 ? currentQuantity - 1 : 1,
+    };
+  });
+};
 
   // TODO: Add to Cart — call cart service with { foodId, quantity }
-  const handleAddToCart = () => {
-    // const qty = quantities[food.id];
-  };
+ const handleAddToCart = async (food) => {
+
+    try {
+
+        const cartData = {
+            foodName: food.foodName,
+            foodPrice : food.foodPrice,
+            foodId : food.foodId,
+            quantity: quantities[food.foodId],  
+            imageUrl  : food.imageUrl
+        };
+        const response = await addToCart(cartData);
+
+        if (response.data.success) {
+            toast.success("Item added to cart");
+        }
+
+    } catch (error) {
+        toast.error(error.response?.data?.message || "Failed to add item");
+    }
+
+};
 
   // TODO: Order Now — likely Add to Cart + redirect to checkout/orders
   const handleOrderNow = () => {
@@ -67,7 +90,7 @@ const Body = () => {
       <div className="container">
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
           {foodItems.map((food) => (
-            <div key={food.id} className="col">
+            <div key={food.foodId} className="col">
               <div className="food-card card h-100 shadow-sm">
                 <img
                   src={food.imageUrl}
@@ -89,17 +112,17 @@ const Body = () => {
                     <button
                       type="button"
                       className="btn btn-outline-secondary btn-sm"
-                      onClick={() => handleDecrement(food.id)}
+                      onClick={() => handleDecrement(food.foodId)}
                     >
                       −
                     </button>
                     <span className="mx-3 fw-semibold">
-                      {quantities[food.id] || 1}
+                      {quantities[food.foodId] || 1}
                     </span>
                     <button
                       type="button"
                       className="btn btn-outline-secondary btn-sm"
-                      onClick={() => handleIncrement(food.id)}
+                      onClick={() => handleIncrement(food.foodId)}
                     >
                       +
                     </button>

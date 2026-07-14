@@ -14,6 +14,23 @@
   color: #ff6b35;
   letter-spacing: 0.5px;
 }
+.nav-link-orders {
+  color: #28a745 !important;   /* green */
+  font-weight: 600;
+}
+
+.nav-link-orders:hover {
+  color: #1e7e34 !important;
+}
+
+.nav-link-cart {
+  color: #ff6b35 !important;   /* your brand orange */
+  font-weight: 600;
+}
+
+.nav-link-cart:hover {
+  color: #e85a2a !important;
+}
 
 .custom-header .nav-link {
   font-weight: 500;

@@ -3,6 +3,8 @@ import LoginModal from "./LoginModal";
 import SignupModal from "./SignupModal";
 import { Link, useNavigate } from "react-router-dom";
 import "./Header.css";
+import { toast } from "react-toastify";
+
 
 const Header = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -55,23 +57,19 @@ const Header = () => {
 
   // Derive initials from the logged-in user's name (stored earlier in localStorage)
   const getUserInitials = () => {
-    const user = JSON.parse(localStorage.getItem("userData") || "{}");
-    if (!user.name) return "U";
-    const parts = user.name.trim().split(" ");
-    const initials = parts.length > 1
-      ? parts[0][0] + parts[parts.length - 1][0]
-      : parts[0][0];
-    return initials.toUpperCase();
+    
+    return "BSR";
   };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userData");
 
     // Tell every listening component (including this one) that auth changed
     window.dispatchEvent(new Event("authChange"));
 
     setIsLoggedIn(false);
-    navigate("/login");
+    toast.error("Logout success");
   };
 
   return (
@@ -121,13 +119,13 @@ const Header = () => {
             {isLoggedIn && (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/orders">
+                  <Link className="nav-link nav-link-orders" to="/orders">
                     Orders
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/cart">
-                    Cart
+                  <Link className="nav-link nav-link-cart" to="/cart">
+                    <i className="bi bi-cart3 me-1"></i>Cart
                   </Link>
                 </li>
               </>

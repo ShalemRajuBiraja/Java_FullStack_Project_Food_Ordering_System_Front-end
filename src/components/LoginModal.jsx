@@ -46,8 +46,9 @@ const LoginModal = ({ show, onClose, onSwitchToSignup  }) => {
             const response = await login(loginData);
 
             if (response?.data?.success) {
-                localStorage.setItem("token", response.data.token);
-                localStorage.setItem("user", JSON.stringify(response.data.user));
+                localStorage.setItem("token", response.data.data.token);
+                localStorage.setItem("userData", JSON.stringify(response.data.data.userData));
+                
                 window.dispatchEvent(new Event("authChange"));
 
                 toast.success("Login successful!");

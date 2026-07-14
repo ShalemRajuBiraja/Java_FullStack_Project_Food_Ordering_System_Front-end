@@ -9,3 +9,8 @@ export const getFoodItems = (page, size) => {
         }
     });
 }
+
+export const addToCart = (cartData) => {
+
+    return axiosInstance.post("/addToCart", cartData);
+}
