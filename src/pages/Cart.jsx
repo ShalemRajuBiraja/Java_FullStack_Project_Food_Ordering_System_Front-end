@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./Cart.css";
 import { toast } from "react-toastify";
 import {getCartItems} from "..//services/foodItemsService";
+import {removeCartItem} from "../services/cartService"
 
 
 // TODO: replace this with cart items fetched from GET /api/cart
@@ -21,7 +22,7 @@ const Cart = () => {
               try {
 
                   const response = await getCartItems();
-
+                  console.log(response);
                   if (response.data.success) {
                       setCartItems(response.data.data);
                   }
@@ -40,29 +41,46 @@ const Cart = () => {
 
 
   // UI-only handlers — swap these for your own API calls
-  const handleIncrement = (id) => {
+  const handleIncrement = (cartId) => {
     // TODO: call PUT /api/cart/:id to update quantity on the backend
     setCartItems((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        item.cartId === cartId ? { ...item, quantity: item.quantity + 1 } : item
       )
     );
   };
 
-  const handleDecrement = (id) => {
+  const handleDecrement = (cartId) => {
     // TODO: call PUT /api/cart/:id to update quantity on the backend
     setCartItems((prev) =>
       prev.map((item) =>
-        item.id === id
+        item.cartId === cartId
           ? { ...item, quantity: item.quantity > 1 ? item.quantity - 1 : 1 }
           : item
       )
     );
   };
 
-  const handleRemove = (id) => {
-    // TODO: call DELETE /api/cart/:id
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+ const handleRemove = async (cartId) => {
+
+    try {
+          const response = await removeCartItem(cartId);
+
+          if (response.data.success) {
+
+                setCartItems((prev) =>
+                prev.filter((item) => item.cartId !== cartId)
+            );
+
+            toast.success(response.data.message);
+        }
+
+      } catch (error) {
+       toast.error(
+       error.response?.data?.message || "Failed to remove item"
+       );
+       console.log(error.message);
+      }
   };
 
   const handleCheckout = () => {
@@ -90,15 +108,15 @@ const Cart = () => {
             ) : (
               <div className="cart-items-list">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="cart-item-row shadow-sm">
+                  <div key={item.cartId} className="cart-item-row shadow-sm">
                     <img
                       src={item.imageUrl}
-                      alt={item.name}
+                      alt={item.Name}
                       className="cart-item-img"
                     />
 
                     <div className="cart-item-details">
-                      <h6 className="fw-bold mb-1">{item.name}</h6>
+                      <h6 className="fw-bold mb-1">{item.foodName}</h6>
                       <p className="cart-item-price mb-0">
                         ₹{item.price.toFixed(2)}
                       </p>
@@ -108,7 +126,7 @@ const Cart = () => {
                       <button
                         type="button"
                         className="btn btn-outline-secondary btn-sm"
-                        onClick={() => handleDecrement(item.id)}
+                        onClick={() => handleDecrement(item.cartId)}
                       >
                         −
                       </button>
@@ -118,7 +136,7 @@ const Cart = () => {
                       <button
                         type="button"
                         className="btn btn-outline-secondary btn-sm"
-                        onClick={() => handleIncrement(item.id)}
+                        onClick={() => handleIncrement(item.cartId)}
                       >
                         +
                       </button>
@@ -131,7 +149,7 @@ const Cart = () => {
                     <button
                       type="button"
                       className="btn btn-link text-danger cart-item-remove"
-                      onClick={() => handleRemove(item.id)}
+                      onClick={() => handleRemove(item.cartId)}
                       aria-label="Remove item"
                     >
                       <i className="bi bi-trash3"></i>
