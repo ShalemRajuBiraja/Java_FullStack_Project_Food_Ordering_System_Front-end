@@ -79,7 +79,7 @@ const Body = () => {
 
   // TODO: Order Now — likely Add to Cart + redirect to checkout/orders
   const handleOrderNow = () => {
-    // const qty = quantities[food.id];
+    alert("Order Button is under developement!");
   };
 
   return (

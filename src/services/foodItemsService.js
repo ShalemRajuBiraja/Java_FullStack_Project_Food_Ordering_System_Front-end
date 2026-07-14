@@ -15,8 +15,3 @@ export const addToCart = (cartData) => {
     return axiosInstance.post(API_ENDPOINTS.ADD_TO_CART, cartData);
 }
 
-
-export const getCartItems = () => {
-
-    return axiosInstance.get(API_ENDPOINTS.GET_CART_ITEMS);
-}

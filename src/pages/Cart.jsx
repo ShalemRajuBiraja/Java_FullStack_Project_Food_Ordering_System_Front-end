@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Cart.css";
 import { toast } from "react-toastify";
-import {getCartItems} from "..//services/foodItemsService";
-import {removeCartItem} from "../services/cartService"
+import {getCartItems,removeCartItem} from "../services/cartService"
 
 
 // TODO: replace this with cart items fetched from GET /api/cart
@@ -22,7 +21,6 @@ const Cart = () => {
               try {
 
                   const response = await getCartItems();
-                  console.log(response);
                   if (response.data.success) {
                       setCartItems(response.data.data);
                   }
@@ -161,7 +159,7 @@ const Cart = () => {
 
             <div className="mt-3">
               <Link to="/" className="back-to-home-link">
-                ← Continue Shopping
+                ← Go to Home
               </Link>
             </div>
           </div>
