@@ -50,10 +50,11 @@ const LoginModal = ({ show, onClose, onSwitchToSignup  }) => {
                 localStorage.setItem("userData", JSON.stringify(response.data.data.userData));
                 
                 window.dispatchEvent(new Event("authChange"));
-
                 toast.success("Login successful!");
-                onClose();
-                navigate("/home");
+                setTimeout(() => {
+                  onClose();
+                  navigate("/home");
+                }, 0);
             }
         } catch (error) {
             console.error("Login failed:", error);
@@ -125,9 +126,13 @@ const LoginModal = ({ show, onClose, onSwitchToSignup  }) => {
               {/* TODO: field error message will go here */}
             </div>
 
-            <button type="submit" className="btn btn-primary w-100">
-              Login
-            </button>
+           <button
+              type="submit"
+              className="btn btn-primary w-100"
+              onClick={(e) => e.stopPropagation()}
+            >
+            Login
+          </button>
           </form>
 
           <p className="text-center text-secondary mt-3 mb-0 small">

@@ -1,19 +1,21 @@
 import  { useState, useEffect, useRef } from "react";
 import LoginModal from "./LoginModal";
 import SignupModal from "./SignupModal";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./Header.css";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 
 const Header = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
 
+  const navigate = useNavigate();
+
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef(null);
 
-  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
   const handleSwitchToSignup = () => {
@@ -70,7 +72,7 @@ const Header = () => {
 
     setIsLoggedIn(false);
     toast.error("Logout success");
-  };
+    navigate("/home");  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm custom-header">
@@ -136,12 +138,15 @@ const Header = () => {
             {!isLoggedIn ? (
               <>
                 <li className="nav-item me-lg-2 mb-2 mb-lg-0">
-                  <button
-                    className="btn btn-outline-primary btn-sm w-100"
-                    onClick={() => setShowLoginModal(true)}
-                  >
-                    Login
-                  </button>
+                 <button
+                  className="btn btn-outline-primary btn-sm w-100"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowLoginModal(true);
+                  }}
+                >
+                Login
+              </button>
                 </li>
                 <li className="nav-item">
                   <button

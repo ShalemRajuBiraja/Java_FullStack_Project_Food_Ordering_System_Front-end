@@ -40,7 +40,7 @@ axiosInstance.interceptors.response.use(
             localStorage.removeItem("token");
             localStorage.removeItem("userData");
 
-            window.location.href = "/login";
+            window.location.href = "/";
 
         }
 

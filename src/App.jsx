@@ -2,12 +2,13 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-
+import ProtectedRoutes from "./components/ProtectedRoutes";
 
 import Home from "./pages/Home";
 import ManagePassword from "./pages/ManagePassword";
 import ManageAddress from "./pages/ManageAddress";
 import AdminLogin from "./components/AdminLogin";
+import Cart from "./pages/Cart";
 
 
 
@@ -23,9 +24,11 @@ const App = () => {
           <Route path="/home" element={<Home />} />
 
           {/* Protected routes */}
-          <Route path="/reset-password" element={ <protectedRoutes> <ManagePassword /> </protectedRoutes>} />
-          <Route path="/manage-address" element={ <protectedRoutes>  <ManageAddress /> </protectedRoutes>} />
-          <Route path="/adminlogin" element={ <protectedRoutes>  <AdminLogin /> </protectedRoutes>} />
+          <Route path="/reset-password" element={ <ProtectedRoutes> <ManagePassword /> </ProtectedRoutes>} />
+          <Route path="/manage-address" element={ <ProtectedRoutes>  <ManageAddress /> </ProtectedRoutes>} />
+          <Route path="/adminlogin" element={ <ProtectedRoutes>  <AdminLogin /> </ProtectedRoutes>} />
+          <Route path="/cart" element={ <ProtectedRoutes>  <Cart /> </ProtectedRoutes>} />
+
 
         </Routes>
       </main>
