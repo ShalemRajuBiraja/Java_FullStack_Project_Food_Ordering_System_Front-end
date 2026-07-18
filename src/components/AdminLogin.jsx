@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./AdminLogin.css";
+import {toast} from "react-toastify";
+import {adminLogin} from "../services/authService";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -16,19 +18,34 @@ const AdminLogin = () => {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+
     e.preventDefault();
     setServerError("");
 
-    // TODO: Step 1 - validate email format + password not empty
-    // TODO: Step 2 - call POST /api/auth/login (same endpoint as user login)
-    //                with { email, password }
-    // TODO: Step 3 - on success, check response.user.role === "ADMIN"
-    //                - if ADMIN  -> store token/role, navigate("/admin/dashboard")
-    //                - if not ADMIN -> show error "Not authorized as admin"
-    //                  and do NOT store the token (this login page is admin-only)
-    // TODO: Step 4 - on failure (401 etc.) -> setServerError(...)
-  };
+    try {
+
+        const response = await adminLogin(formData);
+
+        if (response.data.success) {
+                localStorage.setItem("token", response.data.data.token);
+                localStorage.setItem("userData", JSON.stringify(response.data.data.userData));
+                toast.success(response.data.message);
+
+                navigate("/adminDashboard");
+
+        }
+
+    } catch (error) {
+
+        setServerError(
+            error.response?.data?.message || "Invalid Email or Password"
+        );
+        console.log(error.message);
+
+    }
+
+};
 
   return (
     <div className="admin-login-page d-flex align-items-center justify-content-center">

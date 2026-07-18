@@ -25,6 +25,7 @@ const ManagePassword = () => {
     // TODO: Step 1 - validate old/new/confirm password fields
     // TODO: Step 2 - call PUT/POST /api/users/update-password with { oldPassword, newPassword }
     // TODO: Step 3 - show success/error toast
+    alert("Reset password is under development");
   };
 
   // ---- Reset Password (forgot password) state ----
@@ -67,6 +68,7 @@ const ManagePassword = () => {
   return (
     <div className="manage-password-page d-flex align-items-center justify-content-center">
       <div className="manage-password-card shadow-sm">
+        <p className="text-center text-danger">Reset password is under development</p>
         <h2 className="text-center fw-bold mb-4 manage-password-title">
           Manage Password
         </h2>

@@ -9,3 +9,8 @@ export const login = (loginData) => {
     return axiosInstance.post(API_ENDPOINTS.LOGIN, loginData);
 
 }
+export const adminLogin = (adminLoginData) => {
+
+    return axiosInstance.post(API_ENDPOINTS.ADMIN_LOGIN, adminLoginData);
+
+}

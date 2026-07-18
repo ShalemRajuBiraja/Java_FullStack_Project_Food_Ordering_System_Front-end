@@ -53,6 +53,61 @@
     width: auto !important;
   }
 }
+.profile-dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  text-decoration: none;   /* ✅ removes the underline */
+}
+
+.profile-dropdown-item:hover,
+.profile-dropdown-item:visited,
+.profile-dropdown-item:focus {
+  text-decoration: none;   /* ✅ prevents underline appearing on hover/focus/visited too */
+  color: #333;             /* ✅ prevents the "visited link" purple color */
+}
+/* Your Orders — highlighted button */
+.orders-highlight-btn {
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(135deg, #6dd07a, #73e065);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  text-decoration: none !important;
+  box-shadow: 0 3px 10px rgba(53, 255, 191, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  /* Subtle pulse animation to catch the eye */
+  animation: ordersPulse 2.5s ease-in-out infinite;
+}
+
+.orders-highlight-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(71, 236, 82, 0.5);
+  animation: none; /* stops pulsing once hovered — feels intentional */
+}
+
+/* Pulse keyframes — gently scales the shadow in and out */
+@keyframes ordersPulse {
+  0%   { box-shadow: 0 3px 10px rgba(255, 107, 53, 0.35); }
+  50%  { box-shadow: 0 3px 18px rgba(255, 107, 53, 0.65); }
+  100% { box-shadow: 0 3px 10px rgba(255, 107, 53, 0.35); }
+}
+
+.profile-dropdown-item:hover {
+  background-color: #fff3ee;
+  color: #5dd38e;
+}
 .custom-header {
     position: fixed;
     top: 0;

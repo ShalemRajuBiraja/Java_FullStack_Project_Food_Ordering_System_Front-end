@@ -96,28 +96,29 @@ const Header = () => {
         <div className="collapse navbar-collapse" id="headerNavbar">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link" to="/">
+              <Link className="nav-link" to="/home">
                 Home
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/reviews">
-                Reviews
-              </Link>
-            </li>
+            
             <li className="nav-item">
                 <Link className="nav-link" to="/contact">
-                  Contact
+                  Contact Us
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/adminlogin">
-                  Admin Login
-                </Link>
-              </li>
+               { !isLoggedIn &&(
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/adminLogin">
+                      Admin Login
+                    </Link>
+                  </li>
+                </>
+               )
 
+               }
          
-
+{/* 
             {isLoggedIn && (
               <>
                 <li className="nav-item">
@@ -131,7 +132,7 @@ const Header = () => {
                   </Link>
                 </li>
               </>
-            )}
+            )} */}
           </ul>
 
           <ul className="navbar-nav ms-auto align-items-lg-center">
@@ -159,37 +160,66 @@ const Header = () => {
               </>
             ) : (
               <>
-                <li className="nav-item me-lg-3 mb-2 mb-lg-0">
-                  <Link to="/profile" className="nav-link p-0" title="My Profile">
-                    <i className="bi bi-person-circle fs-4 text-dark"></i>
-                  </Link>
-                </li>
+                {isLoggedIn && (
+                  <li className="nav-item me-lg-2">
+                    <Link to="/orders" className="orders-highlight-btn">
+                      <i className="bi bi-bag-check me-1"></i>
+                      Your Orders
+                    </Link>
+                  </li>
+                )}
+                
                 <li className="nav-item me-lg-3 mb-2 mb-lg-0 position-relative" ref={profileMenuRef}>
-                   <button className="profile-avatar-btn" onClick={() => setShowProfileMenu((prev) => !prev)}> {getUserInitials()} </button>
+             
+                    <Link
+                        to=""
+                        className="nav-link p-0 profile-icon-link"
+                        title="My Profile"
+                        onClick={() => setShowProfileMenu((prev) => !prev)}
+                      >
+                        <div className="d-flex flex-column align-items-center">
+                          <i className="bi bi-person-circle fs-4 text-dark"></i>
+                          <span className="profile-label">User Profile</span>
+                        </div>
+                      </Link>
 
-                    { showProfileMenu && (
-                      <div className="profile-dropdown shadow">
-                        <button className="profile-dropdown-item" onClick={() => setShowProfileMenu(false)}>
-                          Manage Address
-                        </button>
-                        <button className="profile-dropdown-item" onClick={() => setShowProfileMenu(false)}>
-                          Reset Password
-                        </button>
-                        <button className="profile-dropdown-item" onClick={() => setShowProfileMenu(false)}>
-                          Orders History
-                        </button>
-                        <button className="profile-dropdown-item" onClick={() => setShowProfileMenu(false)}>
-                          Notifications
-                        </button>
-                        <button className="profile-dropdown-item" onClick={() => setShowProfileMenu(false)}>
-                          Settings
-                        </button>
-                        <hr className="profile-dropdown-divider" />
-                        <button className="profile-dropdown-item profile-dropdown-logout" onClick={handleLogout}>
-                           Logout
-                        </button>
-                      </div>
-                    )}
+                   {showProfileMenu && (
+                  <div className="profile-dropdown shadow">
+                    <Link
+                      to="/manage-address"
+                      className="profile-dropdown-item"
+                      onClick={() => setShowProfileMenu(false)}
+                    >
+                      Manage Address
+                    </Link>
+
+                    <Link
+                      to="/reset-password"
+                      className="profile-dropdown-item"
+                      onClick={() => setShowProfileMenu(false)}
+                    >
+                      Reset Password
+                    </Link>
+
+                    <Link
+                      to="/orders"
+                      className="profile-dropdown-item"
+                      onClick={() => setShowProfileMenu(false)}
+                    >
+                      Orders History
+                    </Link>
+                    
+                    <hr className="profile-dropdown-divider" />
+
+                    <Link
+                      to="/"
+                      className="profile-dropdown-item profile-dropdown-logout text-danger"
+                      onClick={handleLogout}
+                    >
+                      <strong>Logout</strong>
+                    </Link>
+                  </div>
+                  )}
                   </li>
               </>
             )}

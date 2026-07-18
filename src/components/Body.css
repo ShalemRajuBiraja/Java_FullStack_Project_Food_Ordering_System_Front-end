@@ -1,5 +1,5 @@
 .body-container {
-    min-height: 70vh;
+    min-height: 50vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -31,22 +31,31 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
 }
 
+.food-card .card-body {
+    padding: 0.85rem;
+}
+
 .food-card-img {
-    height: 180px;
+    height: 130px;
     object-fit: cover;
 }
 
 .food-description {
-    min-height: 40px;
+    min-height: 20px;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    font-size: 0.85rem;
 }
 
 .food-price {
     color: #ff6b35;
     font-size: 1.1rem;
+}
+
+.food-card .d-flex.flex-column.gap-2 {
+    gap: 0.4rem !important;
 }
 
 /* Quantity Stepper */
