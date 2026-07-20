@@ -2,7 +2,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import ProtectedRoutes from "./components/ProtectedRoutes";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import Home from "./pages/Home";
 import ManagePassword from "./pages/ManagePassword";
@@ -42,10 +42,10 @@ const App = () => {
           <Route path="/adminDashboard" element={<AdminDashboard />} />
 
           {/* Protected routes */}
-          <Route path="/reset-password" element={<ProtectedRoutes><ManagePassword /></ProtectedRoutes>} />
-          <Route path="/manage-address" element={<ProtectedRoutes><ManageAddress /></ProtectedRoutes>} />
-          <Route path="/orders" element={<ProtectedRoutes><Orders /></ProtectedRoutes>} />
-          <Route path="/payment" element={<ProtectedRoutes><Payment /></ProtectedRoutes>} />
+          <Route path="/reset-password" element={<ProtectedRoute><ManagePassword /></ProtectedRoute>} />
+          <Route path="/manage-address" element={<ProtectedRoute><ManageAddress /></ProtectedRoute>} />
+          <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+          <Route path="/payment" element={<ProtectedRoute><Payment /></ProtectedRoute>} />
 
         </Routes>
       </main>
