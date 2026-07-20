@@ -1,7 +1,7 @@
 import "./LoginModal.css";
 import { useState } from "react";
-import { isEmailValid, passwordRegex } from "../utils/reusableCode";
-import { login } from "../services/authService";
+import { isEmailValid, passwordRegex } from "../utils/temputil";
+import { login } from "../services/tempauth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
