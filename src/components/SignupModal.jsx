@@ -1,7 +1,7 @@
 import "./SignupModal.css";
 import { useState } from "react";
-import { nameRegex, mobileRegex, passwordRegex, isEmailValid } from "../utils/temputil";
-import { signup } from "../services/tempauth";
+import { nameRegex, mobileRegex, passwordRegex, isEmailValid } from "../utils/reusableCode";
+import { signup } from "../services/authService";
 import { toast } from "react-toastify";
 // Props:
 // show   -> boolean, controls whether modal is visible

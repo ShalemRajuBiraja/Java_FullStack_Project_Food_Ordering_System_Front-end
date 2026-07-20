@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./AdminLogin.css";
 import {toast} from "react-toastify";
-import {adminLogin} from "../services/tempauth";
+import {adminLogin} from "../services/authService";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
