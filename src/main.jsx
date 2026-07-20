@@ -9,8 +9,8 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode basename="/Java_FullStack_Project_Food_Ordering_System_Front-end/">
-    <BrowserRouter>
+  <StrictMode>
+    <BrowserRouter basename="/Java_FullStack_Project_Food_Ordering_System_Front-end/">
       <App />
     </BrowserRouter>
   </StrictMode>
