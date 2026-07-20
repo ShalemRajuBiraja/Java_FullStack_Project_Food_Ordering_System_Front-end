@@ -9,7 +9,7 @@ import ManagePassword from "./pages/ManagePassword";
 import ManageAddress from "./pages/ManageAddress";
 import AdminLogin from "./components/AdminLogin";
 import Orders from "./pages/Orders";
-import Payment from "./Components/Payment";
+import Payment from "./components/Payment";
 import Contact from "./pages/Contact";
 import AdminDashboard from "./pages/AdminDashboard";
 
