@@ -88,14 +88,18 @@ const LoginModal = ({ show, onClose, onSwitchToSignup  }) => {
               <label htmlFor="loginEmail" className="form-label">
                 Email address
               </label>
-              <input
-                type="email"
-                className="form-control"
-                id="loginEmail"
-                name="email"
-                placeholder="you@example.com"
-                onChange={(e) => setLoginData({...loginData, email: e.target.value})}
-              />
+             <input
+                  type="email"
+                  className={`form-control ${loginErrors.email ? "is-invalid" : ""}`}
+                  id="loginEmail"
+                  name="email"
+                  placeholder="you@example.com"
+                  value={loginData.email}
+                  onChange={(e) => setLoginData({...loginData, email: e.target.value})}
+                />
+                {loginErrors.email && (
+                  <div className="invalid-feedback">{loginErrors.email}</div>
+                )}
               {/* TODO: field error message will go here */}
             </div>
 
@@ -104,14 +108,18 @@ const LoginModal = ({ show, onClose, onSwitchToSignup  }) => {
               Password
             </label>
             <div className="password-input-wrapper">
-              <input
-                type={showPassword ? "text" : "password"}
-                className="form-control"
-                id="loginPassword"
-                name="password"
-                placeholder="Enter your password"
-                onChange={(e) => setLoginData({...loginData, password: e.target.value})}
-              />
+             <input
+                    type={showPassword ? "text" : "password"}
+                    className={`form-control ${loginErrors.password ? "is-invalid" : ""}`}
+                    id="loginPassword"
+                    name="password"
+                    placeholder="Enter your password"
+                    value={loginData.password}
+                    onChange={(e) => setLoginData({...loginData, password: e.target.value})}
+                  />
+                  {loginErrors.password && (
+                    <div className="invalid-feedback">{loginErrors.password}</div>
+                  )}
               <span
                 className="password-toggle-icon"
                 onClick={() => setShowPassword((prev) => !prev)}
