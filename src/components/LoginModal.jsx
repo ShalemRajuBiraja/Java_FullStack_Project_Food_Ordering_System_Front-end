@@ -95,8 +95,10 @@ const LoginModal = ({ show, onClose, onSwitchToSignup  }) => {
                   name="email"
                   placeholder="you@example.com"
                   value={loginData.email}
-                  onChange={(e) => setLoginData({...loginData, email: e.target.value})}
-                />
+                  onChange={(e) => {
+                  setLoginData({...loginData, email: e.target.value});
+                  setLoginErrors((prev) => ({...prev, email: ""}));
+                }}                />
                 {loginErrors.email && (
                   <div className="invalid-feedback">{loginErrors.email}</div>
                 )}
@@ -115,8 +117,10 @@ const LoginModal = ({ show, onClose, onSwitchToSignup  }) => {
                     name="password"
                     placeholder="Enter your password"
                     value={loginData.password}
-                    onChange={(e) => setLoginData({...loginData, password: e.target.value})}
-                  />
+                      onChange={(e) => {
+                        setLoginData({...loginData, password: e.target.value});
+                        setLoginErrors((prev) => ({...prev, password: ""}));
+                      }}                  />
                   {loginErrors.password && (
                     <div className="invalid-feedback">{loginErrors.password}</div>
                   )}
